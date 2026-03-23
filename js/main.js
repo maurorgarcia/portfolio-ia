@@ -100,3 +100,16 @@
       }
     });
   }
+
+  /* Parallax Animación Mouse */
+  document.addEventListener('mousemove', (e) => {
+    const orbs = document.querySelectorAll('.orb');
+    if(!orbs.length) return;
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+    
+    orbs.forEach((orb, index) => {
+      const speed = (index + 1) * 30;
+      orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+    });
+  });

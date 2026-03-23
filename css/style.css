@@ -398,6 +398,14 @@
 .prompt-result > summary { border-radius: 4px; }
 .prompt-result::after { content: "IA"; font-size: 0.55rem; color: var(--pink); position: absolute; bottom: -18px; right: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
 
+/* ── SCANLINES & GLOWS ── */
+.scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px; pointer-events: none; z-index: 9999; opacity: 0.15; }
+.concept-card { transition: border-color .3s, transform .3s, box-shadow .3s !important; }
+.concept-card:hover { border-color: var(--cyan) !important; transform: translateY(-8px) scale(1.02) !important; box-shadow: 0 15px 30px rgba(0,255,209,0.15) !important; }
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0,255,209,0.4), transparent); transform: skewX(-20deg); transition: 0.5s; }
+.btn-primary:hover::after { left: 150%; }
+
 /* responsive */
   @media (max-width:600px) {
     nav { padding: 1rem 1.2rem; }
