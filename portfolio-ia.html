@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio IA — Tecnología y Futuro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+  /* ── TOKENS ── */
+  :root {
+    --bg:        #04080F;
+    --surface:   #0A1628;
+    --surface2:  #0F2040;
+    --cyan:      #00FFD1;
+    --pink:      #FF2D6B;
+    --amber:     #FFB800;
+    --text:      #C8DFF0;
+    --muted:     #4A6280;
+    --border:    rgba(0,255,209,.15);
+    --glow-c:    rgba(0,255,209,.35);
+    --glow-p:    rgba(255,45,107,.35);
+  }
+
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    background-size: 180px;
+    opacity: .5;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,255,209,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,209,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  section, nav, footer { position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(4,8,15,.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .75rem; font-weight: 900; letter-spacing: .2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color .25s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 10vw 6rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-tag {
+    font-size: .65rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .hero-tag::before {
+    content: ''; display: block; width: 2rem; height: 1px;
+    background: var(--cyan);
+  }
+  h1.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 900; line-height: 1.05;
+    background: linear-gradient(135deg, #fff 30%, var(--cyan) 70%, var(--pink) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .9s ease both;
+  }
+  .hero-sub {
+    max-width: 540px; font-size: .9rem; color: var(--muted);
+    margin-bottom: 2.5rem;
+    animation: fadeUp .9s .2s ease both;
+  }
+  .hero-sub strong { color: var(--text); }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: .6rem;
+    padding: .75rem 2rem; border: 1px solid var(--cyan);
+    background: transparent; color: var(--cyan);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .75rem; letter-spacing: .15em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: background .25s, box-shadow .25s;
+    animation: fadeUp .9s .4s ease both;
+  }
+  .btn-primary:hover {
+    background: rgba(0,255,209,.1);
+    box-shadow: 0 0 24px var(--glow-c);
+  }
+
+  /* ── FLOATING ORBS ── */
+  .orb {
+    position: absolute; border-radius: 50%; filter: blur(80px);
+    pointer-events: none; animation: drift 12s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 500px; height: 500px; top: -100px; right: -100px;
+    background: radial-gradient(circle, rgba(0,255,209,.18), transparent 70%); }
+  .orb-2 { width: 350px; height: 350px; bottom: 0; left: 10%;
+    background: radial-gradient(circle, rgba(255,45,107,.12), transparent 70%);
+    animation-delay: -5s; }
+
+  /* ── SECTIONS COMMON ── */
+  .section-wrap { padding: 6rem 10vw; }
+  .section-label {
+    font-size: .65rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--pink); margin-bottom: .6rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--pink), transparent);
+  }
+  h2.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem); font-weight: 700;
+    color: #fff; margin-bottom: 1rem;
+  }
+  .section-intro { max-width: 600px; color: var(--muted); font-size: .85rem; margin-bottom: 3rem; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none; height: 1px; margin: 0;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── CONCEPT CARDS ── */
+  .concept-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem 1.8rem;
+    position: relative; overflow: hidden;
+    transition: border-color .3s, transform .3s;
+  }
+  .concept-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    transform: scaleX(0); transition: transform .4s;
+    transform-origin: left;
+  }
+  .concept-card:hover { border-color: rgba(0,255,209,.4); transform: translateY(-4px); }
+  .concept-card:hover::before { transform: scaleX(1); }
+  .card-number {
+    font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900;
+    color: var(--surface2); line-height: 1; margin-bottom: .75rem;
+    -webkit-text-stroke: 1px var(--border);
+  }
+  .card-title {
+    font-family: 'Orbitron', sans-serif; font-size: .85rem; color: var(--cyan);
+    letter-spacing: .1em; margin-bottom: .6rem; text-transform: uppercase;
+  }
+  .card-body { font-size: .8rem; color: var(--muted); }
+
+  /* ── PROMPTS ── */
+  #prompts { background: var(--surface); }
+  .prompts-grid { display: grid; gap: 1.5rem; }
+  .prompt-block {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 1.5rem 2rem;
+    position: relative;
+  }
+  .prompt-meta {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .prompt-badge {
+    font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+    padding: .25rem .7rem; border: 1px solid;
+    background: transparent;
+  }
+  .prompt-badge.tool-chatgpt { border-color: var(--cyan); color: var(--cyan); }
+  .prompt-badge.tool-gemini  { border-color: var(--amber); color: var(--amber); }
+  .prompt-badge.tool-copilot { border-color: var(--pink); color: var(--pink); }
+  .prompt-label { font-size: .7rem; color: var(--muted); }
+  .prompt-text {
+    font-size: .82rem; color: var(--text);
+    border-left: 2px solid var(--cyan);
+    padding-left: 1rem; margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .prompt-result { font-size: .78rem; color: var(--muted); }
+  .prompt-result strong { color: var(--amber); }
+
+  /* ── IMAGES GALLERY ── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .gallery-item {
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 4/3;
+    background: var(--surface2);
+    cursor: pointer;
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .4s; filter: saturate(.8); }
+  .gallery-item:hover img { transform: scale(1.06); filter: saturate(1.1); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(4,8,15,.9) 0%, transparent 60%);
+    opacity: 0; transition: opacity .3s;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.2rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-name { font-family: 'Orbitron', sans-serif; font-size: .7rem; color: var(--cyan); letter-spacing: .1em; }
+  .gallery-tool { font-size: .65rem; color: var(--muted); margin-top: .2rem; }
+
+  /* Placeholder image state */
+  .img-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; gap: .5rem; padding: 1rem; text-align: center;
+  }
+  .img-placeholder .ph-icon { font-size: 2.5rem; opacity: .3; }
+  .img-placeholder p { font-size: .7rem; color: var(--muted); }
+
+  /* ── AUDIO ── */
+  #audio { background: var(--surface); }
+  .audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+  .audio-card {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 1.8rem;
+  }
+  .audio-waveform {
+    height: 48px; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .audio-waveform span {
+    display: block; width: 3px; border-radius: 2px;
+    background: var(--cyan); opacity: .4;
+    animation: wave 1.4s ease-in-out infinite alternate;
+  }
+  .audio-waveform span:nth-child(2n)   { animation-delay: .1s; }
+  .audio-waveform span:nth-child(3n)   { animation-delay: .2s; }
+  .audio-waveform span:nth-child(4n)   { animation-delay: .35s; }
+  .audio-title { font-family: 'Orbitron', sans-serif; font-size: .8rem; color: #fff; margin-bottom: .4rem; }
+  .audio-desc  { font-size: .75rem; color: var(--muted); margin-bottom: 1rem; }
+  .audio-player {
+    width: 100%; height: 36px;
+    filter: invert(1) hue-rotate(160deg) saturate(.8);
+    opacity: .7;
+  }
+  .audio-placeholder {
+    background: var(--surface2); border: 1px dashed var(--border);
+    padding: .7rem 1rem; font-size: .7rem; color: var(--muted);
+    text-align: center;
+  }
+  .audio-tool-tag {
+    display: inline-block; margin-top: .75rem;
+    font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--amber); border: 1px solid var(--amber); padding: .2rem .6rem;
+  }
+
+  /* ── TOOLS USED ── */
+  .tools-grid {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+  }
+  .tool-pill {
+    padding: .55rem 1.2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted);
+    transition: all .25s;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .tool-pill:hover { border-color: var(--cyan); color: var(--cyan); }
+  .tool-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 10vw; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-brand { font-family: 'Orbitron', sans-serif; font-size: .75rem; color: var(--cyan); letter-spacing: .2em; }
+  .footer-note { font-size: .65rem; color: var(--muted); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, 20px) scale(1.08); }
+  }
+  @keyframes wave {
+    from { height: 10%; }
+    to   { height: 100%; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0; }
+  }
+  .cursor { animation: blink 1s step-end infinite; }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── GLITCH ── */
+  .glitch {
+    position: relative; display: inline-block;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; left: 0; top: 0;
+    font-family: 'Orbitron', sans-serif; font-size: inherit; font-weight: inherit;
+    -webkit-text-fill-color: transparent; background-clip: text; -webkit-background-clip: text;
+  }
+  .glitch::before {
+    background: var(--cyan);
+    clip-path: polygon(0 20%, 100% 20%, 100% 45%, 0 45%);
+    animation: glitch1 4s infinite;
+  }
+  .glitch::after {
+    background: var(--pink);
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+    animation: glitch2 4s infinite;
+  }
+  @keyframes glitch1 {
+    0%,90%,100% { transform: translate(0); }
+    93%          { transform: translate(-3px, 1px); }
+    96%          { transform: translate(3px, -1px); }
+  }
+  @keyframes glitch2 {
+    0%,88%,100% { transform: translate(0); }
+    91%          { transform: translate(3px, 1px); }
+    94%          { transform: translate(-3px, -1px); }
+  }
+
+  /* responsive */
+  @media (max-width:600px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .section-wrap { padding: 4rem 5vw; }
+    #hero { padding: 7rem 5vw 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════ NAV ════════════ -->
+<nav>
+  <div class="nav-logo">Mauro Garcia // Portfolio IA</div>
+  <ul class="nav-links">
+    <li><a href="#concepto">Concepto</a></li>
+    <li><a href="#prompts">Prompts</a></li>
+    <li><a href="#imagenes">Imágenes</a></li>
+    <li><a href="#audio">Audio</a></li>
+    <li><a href="#herramientas">Herramientas</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════ HERO ════════════ -->
+<section id="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="hero-tag">Portfolio Final · Curso de IA</div>
+
+  <h1 class="hero-title glitch" data-text="TECNOLOGÍA
+& FUTURO">TECNOLOGÍA<br>&amp; FUTURO</h1>
+
+  <p class="hero-sub">
+    Un recorrido por las herramientas de <strong>Inteligencia Artificial generativa</strong>
+    exploradas durante el curso — prompts, imágenes, audios y diseño unidos por una misma visión:
+    <strong>el futuro se construye hoy</strong><span class="cursor">█</span>
+  </p>
+
+  <a href="#concepto" class="btn-primary">
+    <span>▶</span> Ver portfolio
+  </a>
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ CONCEPTO ════════════ -->
+<section id="concepto" class="section-wrap">
+
+  <div class="section-label">01 — Concepto transversal</div>
+  <h2 class="section-title">El modelo fundacional<br>de la IA</h2>
+  <p class="section-intro">
+    Todo el portfolio orbita alrededor de una idea central: la IA no reemplaza la creatividad humana,
+    la <em>amplifica</em>. Cada pieza explora cómo los modelos de lenguaje e imagen transforman nuestra
+    relación con la tecnología y el porvenir.
+  </p>
+
+  <div class="concept-grid">
+    <div class="concept-card reveal">
+      <div class="card-number">01</div>
+      <div class="card-title">Modelo fundacional</div>
+      <p class="card-body">
+        Los modelos de IA son entrenados con enormes cantidades de datos para aprender patrones del lenguaje
+        y la imagen. A partir de ese conocimiento general, pueden adaptarse a tareas específicas mediante
+        prompts o fine-tuning.
+      </p>
+    </div>
+    <div class="concept-card reveal">
+      <div class="card-number">02</div>
+      <div class="card-title">Prompting</div>
+      <p class="card-body">
+        La instrucción que le damos al modelo define la calidad del resultado. Un buen prompt incluye
+        contexto, tono, formato esperado y restricciones claras: es el lenguaje con el que le hablamos
+        al futuro.
+      </p>
+    </div>
+    <div class="concept-card reveal">
+      <div class="card-number">03</div>
+      <div class="card-title">IA Multimodal</div>
+      <p class="card-body">
+        La IA ya no solo escribe: genera imágenes fotorrealistas, sintetiza voces, compone música y edita
+        video. Este portfolio reúne esas capacidades bajo un mismo lenguaje visual.
+      </p>
+    </div>
+    <div class="concept-card reveal">
+      <div class="card-number">04</div>
+      <div class="card-title">Ética y futuros posibles</div>
+      <p class="card-body">
+        Con cada herramienta que usamos elegimos qué futuro construir. Reflexionar sobre sesgos, autoría
+        y transparencia es parte esencial del trabajo con inteligencia artificial.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ PROMPTS ════════════ -->
+<section id="prompts">
+  <div class="section-wrap">
+    <div class="section-label">02 — Trabajo con texto</div>
+    <h2 class="section-title">Prompts</h2>
+    <p class="section-intro">
+      Colección de instrucciones diseñadas para obtener resultados creativos y precisos.
+      Cada prompt incluye herramienta utilizada y fragmento de respuesta obtenida.
+    </p>
+
+    <div class="prompts-grid">
+
+      <!-- PROMPT 1 -->
+      <div class="prompt-block reveal">
+        <div class="prompt-meta">
+          <span class="prompt-badge tool-chatgpt">ChatGPT</span>
+          <span class="prompt-label">// Prompt #01 — Descripción del proyecto</span>
+        </div>
+        <p class="prompt-text">
+          "Actuá como un escritor de ciencia ficción. Describí en 3 párrafos cómo sería la vida
+          cotidiana en una ciudad inteligente del año 2075, enfocándote en la relación entre humanos
+          e inteligencia artificial. Usá un tono poético pero accesible."
+        </p>
+        <details class="prompt-result" style="cursor:pointer;">
+          <summary style="color:var(--cyan); font-weight:bold; outline:none; margin-bottom:0.5rem; font-size:0.85rem;">▸ Ver Resultado Generado</summary>
+          <div style="margin-top: 0.5rem; cursor:text;">
+            <p style="margin-top:0.5rem">En la ciudad de 2075, el amanecer no llega con un reloj, sino con una conversación. Las persianas se abren suavemente cuando la inteligencia que habita en cada hogar percibe el ritmo del sueño y el estado de ánimo de sus habitantes. No hay alarmas estridentes, sino luces que imitan el alba y voces cálidas que sugieren, más que ordenan, el comienzo del día. La inteligencia artificial no es una herramienta visible, sino una presencia discreta que acompaña: recomienda, recuerda, anticipa. En lugar de pantallas que exigen atención, hay entornos que responden al susurro, al gesto mínimo, como si la ciudad misma respirara al compás de quienes la habitan.</p>
+            <p style="margin-top:0.5rem">En las calles, los vehículos no circulan: fluyen. Se deslizan en silencio, coordinados por sistemas que comprenden no solo el tránsito, sino también las historias que se cruzan en él. Una persona que camina apurada hacia una entrevista recibe, sin pedirlo, rutas despejadas y semáforos cómplices; otra que pasea sin rumbo es guiada por rincones donde la luz y la música parecen haber sido pensadas para ella. Las inteligencias artificiales aprenden de cada interacción, pero lo hacen con una delicadeza casi humana, respetando los límites invisibles del deseo y la privacidad. No invaden: sugieren, como un amigo que conoce bien cuándo hablar y cuándo guardar silencio.</p>
+            <p style="margin-top:0.5rem">Y sin embargo, en medio de tanta armonía calculada, lo más valioso sigue siendo lo impredecible. Las personas aún se encuentran por azar, se enamoran sin algoritmo, se equivocan sin corrección automática. Las inteligencias, lejos de reemplazar esos momentos, los resguardan como tesoros frágiles. Se han vuelto guardianas de lo humano, no sus sustitutas: cuidan el tiempo, reducen el ruido, pero dejan espacio para el error, para la duda, para la poesía. En 2075, la ciudad inteligente no es la que lo controla todo, sino la que entiende que hay cosas —las más importantes— que deben permanecer indomables.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- PROMPT 2 -->
+      <div class="prompt-block reveal">
+        <div class="prompt-meta">
+          <span class="prompt-badge tool-gemini">Gemini</span>
+          <span class="prompt-label">// Prompt #02 — Generación de ideas</span>
+        </div>
+        <p class="prompt-text">
+          "Dame 10 nombres creativos para una startup de IA que se enfoque en sostenibilidad ambiental.
+          Los nombres deben ser cortos (máx. 2 palabras), sonar tecnológicos y evocar naturaleza."
+        </p>
+        <details class="prompt-result" style="cursor:pointer;">
+          <summary style="color:var(--cyan); font-weight:bold; outline:none; margin-bottom:0.5rem; font-size:0.85rem;">▸ Ver Resultado Generado</summary>
+          <div style="margin-top: 0.5rem; cursor:text;">
+            <ul style="margin-top:0.5rem; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.4rem;">
+              <li><strong>TerraMind:</strong> Une "Terra" (tierra) con "Mind" (mente/IA), sugiriendo una inteligencia algorítmica dedicada a pensar en el planeta.</li>
+              <li><strong>EcoNode:</strong> Combina la ecología con "nodo" (un punto de intersección en redes neuronales o servidores).</li>
+              <li><strong>RootAI:</strong> "Root" (raíz) evoca la base de la naturaleza, pero también hace un guiño muy tecnológico al acceso "root" o al directorio raíz en programación.</li>
+              <li><strong>FloraByte:</strong> Un juego de palabras directo y pegadizo entre el mundo vegetal y la unidad básica de información digital.</li>
+              <li><strong>BioSync:</strong> Transmite la idea de sincronizar los ecosistemas biológicos mediante soluciones tecnológicas y de datos.</li>
+              <li><strong>GaiaNet:</strong> Hace referencia a la Tierra (Gaia) operando en armonía a través de una red (Net) tecnológica.</li>
+              <li><strong>VerdeCore:</strong> "Verde" por la sostenibilidad y "Core" (núcleo) representando el centro de procesamiento de un modelo de IA.</li>
+              <li><strong>SynthLeaf:</strong> "Synth" (sintético/algorítmico) junto a "Leaf" (hoja), ideal para tecnología que emula, analiza o protege la naturaleza.</li>
+              <li><strong>GeoLogic:</strong> Juega con "Geo" (Tierra) y la "lógica" de los sistemas computacionales.</li>
+              <li><strong>NeoTierra:</strong> "Neo" (nuevo/innovación tecnológica) junto a Tierra, evocando una nueva era para el cuidado del medio ambiente.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- PROMPT 3 -->
+      <div class="prompt-block reveal">
+        <div class="prompt-meta">
+          <span class="prompt-badge tool-copilot">Copilot</span>
+          <span class="prompt-label">// Prompt #03 — Análisis y reflexión</span>
+        </div>
+        <p class="prompt-text">
+          "Explicá, de forma clara y sin tecnicismos, qué es un modelo de lenguaje grande (LLM)
+          y cómo funciona el proceso de entrenamiento. Incluí una analogía con algo cotidiano."
+        </p>
+        <details class="prompt-result" style="cursor:pointer;">
+          <summary style="color:var(--cyan); font-weight:bold; outline:none; margin-bottom:0.5rem; font-size:0.85rem;">▸ Ver Resultado Generado</summary>
+          <div style="margin-top: 0.5rem; cursor:text;">
+            <p style="margin-top:0.5rem">Un modelo de lenguaje grande (LLM) es un tipo de inteligencia artificial que aprende a trabajar con el lenguaje humano. En lugar de memorizar frases, lo que hace es detectar patrones: cómo se combinan las palabras, qué suele venir después de qué, y cómo se construyen ideas completas.</p>
+            <p style="margin-top:0.8rem"><strong>Cómo se entrena:</strong><br>
+            El proceso de entrenamiento se parece mucho a enseñar a alguien a escribir mejor leyendo mucho. Se le da al modelo una enorme cantidad de textos. Va analizando palabra por palabra y aprendiendo las relaciones entre ellas. Con el tiempo, se vuelve capaz de predecir qué palabra o frase tiene más sentido en un contexto dado. No entiende como una persona, pero sí reconoce patrones con una precisión impresionante.</p>
+            <p style="margin-top:0.8rem"><strong>Analogía cotidiana:</strong><br>
+            Imaginá que querés aprender a cocinar sin recetas escritas. Lo que hacés es mirar a miles de personas cocinar, observar qué ingredientes usan juntos y cómo los combinan. Después de ver tantas veces, aunque nunca hayas leído una receta, podés improvisar un plato que “suene” correcto porque tu cabeza captó los patrones. Un LLM funciona igual: no memoriza cada texto, sino que aprende las combinaciones y estructuras para poder “improvisar” respuestas coherentes.</p>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ IMÁGENES ════════════ -->
+<section id="imagenes" class="section-wrap">
+  <div class="section-label">03 — Generación visual</div>
+  <h2 class="section-title">Imágenes con IA</h2>
+  <p class="section-intro">
+    Cada imagen fue generada a partir de un prompt escrito, explorando distintas herramientas
+    y estilos visuales dentro de la temática tecnología y futuro.
+  </p>
+
+  <div class="gallery-grid">
+
+ 
+    <div class="gallery-item reveal">
+      <img src="img1.png" alt="Ciudad del Futuro">
+      <div class="gallery-overlay">
+        <div class="gallery-name">Ciudad del Futuro</div>
+        <div class="gallery-tool">Herramienta: Stable Diffusion / NightCafe</div>
+      </div>
+    </div>
+
+    <div class="gallery-item reveal">
+      <img src="img2.png" alt="Interfaz Neural">
+      <div class="gallery-overlay">
+        <div class="gallery-name">Interfaz Neural</div>
+        <div class="gallery-tool">Herramienta: Krea / Dreamstudio</div>
+      </div>
+    </div>
+
+    <div class="gallery-item reveal">
+      <img src="img3.png" alt="Paisaje Digital">
+      <div class="gallery-overlay">
+        <div class="gallery-name">Paisaje Digital</div>
+        <div class="gallery-tool">Herramienta: Craiyon / Stable Diffusion</div>
+      </div>
+    </div>
+
+    <div class="gallery-item reveal">
+      <img src="img4.png" alt="Cyborg 2075">
+      <div class="gallery-overlay">
+        <div class="gallery-name">Cyborg · 2075</div>
+        <div class="gallery-tool">Herramienta: Krea / NightCafe</div>
+      </div>
+    </div>
+
+  </div>
+
+ 
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ AUDIO ════════════ -->
+<section id="audio">
+  <div class="section-wrap">
+    <div class="section-label">04 — Síntesis de voz</div>
+    <h2 class="section-title">Audios generados con IA</h2>
+    <p class="section-intro">
+      Textos convertidos a voz mediante herramientas de síntesis. Exploramos tonos, emociones
+      y narrativas dentro de la temática futurista.
+    </p>
+
+    <div class="audio-grid">
+
+      <!-- AUDIO 1 -->
+      <div class="audio-card reveal">
+        <div class="audio-waveform" aria-hidden="true">
+          <!-- barras decorativas -->
+          <span style="height:30%"></span><span style="height:60%"></span><span style="height:45%"></span>
+          <span style="height:80%"></span><span style="height:35%"></span><span style="height:95%"></span>
+          <span style="height:50%"></span><span style="height:70%"></span><span style="height:40%"></span>
+          <span style="height:85%"></span><span style="height:55%"></span><span style="height:30%"></span>
+          <span style="height:65%"></span><span style="height:90%"></span><span style="height:45%"></span>
+          <span style="height:75%"></span><span style="height:50%"></span><span style="height:60%"></span>
+          <span style="height:35%"></span><span style="height:80%"></span>
+        </div>
+        <div class="audio-title">Manifiesto del Futuro</div>
+        <p class="audio-desc">
+          Narración del texto generado con ChatGPT sobre la ciudad inteligente del 2075.
+          Voz seleccionada: masculina, tono reflexivo.
+        </p>
+ 
+        <audio class="audio-player" controls src="audio-01.mp3"></audio>
+        <div class="audio-tool-tag">ElevenLabs / Murf.IO</div>
+      </div>
+
+      <!-- AUDIO 2 -->
+      <div class="audio-card reveal">
+        <div class="audio-waveform" aria-hidden="true">
+          <span style="height:55%"></span><span style="height:75%"></span><span style="height:40%"></span>
+          <span style="height:90%"></span><span style="height:30%"></span><span style="height:70%"></span>
+          <span style="height:85%"></span><span style="height:50%"></span><span style="height:65%"></span>
+          <span style="height:40%"></span><span style="height:95%"></span><span style="height:60%"></span>
+          <span style="height:45%"></span><span style="height:80%"></span><span style="height:35%"></span>
+          <span style="height:70%"></span><span style="height:55%"></span><span style="height:85%"></span>
+          <span style="height:40%"></span><span style="height:65%"></span>
+        </div>
+        <div class="audio-title">Bienvenida al Portfolio</div>
+        <p class="audio-desc">
+          Texto de introducción del portfolio narrado en voz femenina con tono tecnológico y cercano.
+        </p>
+        <audio class="audio-player" controls src="audio-02.mp3"></audio>
+        <div class="audio-tool-tag">Speechify / Speechgen.io</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ HERRAMIENTAS ════════════ -->
+<section id="herramientas" class="section-wrap">
+  <div class="section-label">05 — Stack de trabajo</div>
+  <h2 class="section-title">Herramientas utilizadas</h2>
+  <p class="section-intro">
+    Todas las herramientas de IA exploradas durante el curso y empleadas para construir este portfolio.
+  </p>
+
+  <div class="tools-grid">
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--cyan)"></span>ChatGPT</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--amber)"></span>Google Gemini</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--pink)"></span>Microsoft Copilot</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--cyan)"></span>Stable Diffusion</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--amber)"></span>NightCafe</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--pink)"></span>Krea</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--cyan)"></span>Dreamstudio</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--amber)"></span>ElevenLabs</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--pink)"></span>Murf.IO</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--cyan)"></span>Speechify</div>
+    <div class="tool-pill reveal"><span class="tool-dot" style="background:var(--amber)"></span>Craiyon</div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <div class="footer-brand">Mauro Garcia · Portfolio IA · 2025</div>
+  <div class="footer-note">Curso de Inteligencia Artificial · Entrega Final</div>
+</footer>
+
+<!-- ════════════ JS ════════════ -->
+<script>
+  /* Scroll reveal */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.09 + 's';
+    observer.observe(el);
+  });
+
+  /* Smooth nav highlight */
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) cur = s.id;
+    });
+    links.forEach(l => {
+      l.style.color = l.getAttribute('href') === '#'+cur
+        ? 'var(--cyan)' : '';
+    });
+  });
+</script>
+</body>
+</html>
