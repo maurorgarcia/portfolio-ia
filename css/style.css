@@ -398,6 +398,15 @@
 .prompt-result > summary { border-radius: 4px; }
 .prompt-result::after { content: "IA"; font-size: 0.55rem; color: var(--pink); position: absolute; bottom: -18px; right: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
 
+/* ── CUSTOM SCROLLBAR & CURSOR ── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--border); }
+::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 4px; box-shadow: 0 0 10px var(--cyan); }
+::-webkit-scrollbar-thumb:hover { background: var(--pink); }
+
+body { cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="2" fill="%2300FFD1"/><path d="M12 2v6M12 22v-6M2 12h6M22 12h-6" stroke="%23FF2D6B" stroke-width="1.5"/></svg>') 12 12, crosshair; }
+a, button, .concept-card, .gallery-item, .progress-container, summary { cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4" fill="%23FF2D6B"/><path d="M12 0v5M12 24v-5M0 12h5M24 12h-5" stroke="%2300FFD1" stroke-width="1.5"/></svg>') 12 12, pointer !important; }
+
 /* ── SCANLINES & GLOWS ── */
 .scanlines { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 4px; pointer-events: none; z-index: 9999; opacity: 0.15; }
 .concept-card { transition: border-color .3s, transform .3s, box-shadow .3s !important; }

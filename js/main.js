@@ -113,3 +113,24 @@
       orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
     });
   });
+
+  /* Particles.js Background Network */
+  if (typeof particlesJS !== 'undefined') {
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#00ffd1" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.4, "random": true },
+        "size": { "value": 2, "random": true },
+        "line_linked": { "enable": true, "distance": 140, "color": "#ff2d6b", "opacity": 0.25, "width": 1 },
+        "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "out_mode": "out" }
+      },
+      "interactivity": {
+        "detect_on": "window",
+        "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+        "modes": { "grab": { "distance": 220, "line_linked": { "opacity": 0.7 } }, "push": { "particles_nb": 3 } }
+      },
+      "retina_detect": true
+    });
+  }
