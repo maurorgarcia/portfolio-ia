@@ -415,6 +415,23 @@ a, button, .concept-card, .gallery-item, .progress-container, summary { cursor: 
 .btn-primary::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0,255,209,0.4), transparent); transform: skewX(-20deg); transition: 0.5s; }
 .btn-primary:hover::after { left: 150%; }
 
+/* ── PRELOADER & SCROLL-TOP ── */
+.preloader { position: fixed; inset: 0; background: #020408; z-index: 999999; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
+.preloader.hidden { opacity: 0; visibility: hidden; }
+.terminal { font-family: 'IBM Plex Mono', monospace; color: var(--cyan); font-size: 0.95rem; text-shadow: 0 0 8px var(--cyan); width: 80%; max-width: 600px; text-transform: uppercase; }
+.terminal p { margin: 0.5rem 0; overflow: hidden; white-space: nowrap; width: 0; animation: typing 0.5s steps(40, end) forwards; border-right: 2px solid transparent; }
+.terminal p:nth-child(1) { animation-delay: 0.2s; }
+.terminal p:nth-child(2) { animation-delay: 0.7s; }
+.terminal p:nth-child(3) { animation-delay: 1.2s; }
+.terminal p:nth-child(4) { animation-delay: 1.7s; }
+.blink { animation: blink-cursor 1s infinite alternate !important; border-right: 2px solid var(--cyan) !important; }
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink-cursor { 0% { border-right-color: var(--cyan); } 50% { border-right-color: transparent; } 100% { border-right-color: var(--cyan); } }
+
+.btn-top { position: fixed; bottom: -60px; right: 30px; width: 45px; height: 45px; background: var(--surface); color: var(--cyan); border: 1px solid var(--cyan); border-radius: 5px; font-size: 1.2rem; display: flex; justify-content: center; align-items: center; cursor:pointer; outline: none; transition: bottom 0.4s ease, background 0.3s, transform 0.3s, box-shadow 0.3s; z-index: 9999; }
+.btn-top.show { bottom: 30px; }
+.btn-top:hover { transform: translateY(-5px); background: rgba(0,255,209,0.1); box-shadow: 0 0 15px var(--cyan); }
+
 /* responsive */
   @media (max-width:600px) {
     nav { padding: 1rem 1.2rem; }
