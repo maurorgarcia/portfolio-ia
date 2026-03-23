@@ -135,6 +135,18 @@
     });
   }
 
+  /* Vanilla Tilt 3D Effect */
+  if (typeof VanillaTilt !== 'undefined') {
+    VanillaTilt.init(document.querySelectorAll(".concept-card, .audio-card"), {
+      max: 12,
+      speed: 400,
+      glare: true,
+      "max-glare": 0.15,
+      perspective: 1000,
+      scale: 1.02
+    });
+  }
+
   /* Preloader Matrix Rain */
   const canvas = document.getElementById('matrix-canvas');
   let matrixInterval;
