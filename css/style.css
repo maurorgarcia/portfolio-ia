@@ -436,9 +436,10 @@ a, button, .concept-card, .gallery-item, .progress-container, summary { cursor: 
 .btn-top:hover { transform: translateY(-5px); background: rgba(0,255,209,0.1); box-shadow: 0 0 15px var(--cyan); }
 
 /* responsive */
-  @media (max-width:600px) {
-    nav { padding: 1rem 1.2rem; }
-    .nav-links { display: none; }
+  @media (max-width:768px) {
+    nav { flex-direction: column; gap: 0.8rem; padding: 1rem; align-items: center; }
+    .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+    .nav-links a { font-size: 0.65rem; }
     .section-wrap { padding: 4rem 5vw; }
     #hero { padding: 7rem 5vw 4rem; }
   }
