@@ -365,7 +365,40 @@
     94%          { transform: translate(-3px, -1px); }
   }
 
-  /* responsive */
+  /* ── CUSTOM AUDIO PLAYER ── */
+.custom-audio { display: flex; align-items: center; gap: 1rem; background: rgba(0,255,209,0.05); border: 1px solid var(--cyan); padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+.play-btn { background: transparent; border: none; color: var(--cyan); font-size: 1.2rem; cursor: pointer; transition: transform 0.2s, text-shadow 0.2s; outline: none; }
+.play-btn:hover { transform: scale(1.1); text-shadow: 0 0 10px var(--cyan); }
+.progress-container { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; cursor: pointer; position: relative; overflow: hidden; }
+.progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--pink)); border-radius: 3px; transition: width 0.1s linear; pointer-events: none; }
+.time-display { font-size: 0.65rem; color: var(--muted); min-width: 75px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ── LIGHTBOX ── */
+.lightbox { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(4,8,15,0.95); backdrop-filter: blur(10px); }
+.lightbox.active { display: flex; justify-content: center; align-items: center; animation: fadeIn 0.3s forwards; }
+.lightbox-content { max-width: 90%; max-height: 85vh; border: 1px solid var(--cyan); box-shadow: 0 0 40px rgba(0,255,209,0.2); animation: zoomIn 0.3s forwards; }
+.lightbox-close { position: absolute; top: 20px; right: 35px; color: var(--muted); font-size: 40px; font-weight: bold; transition: color 0.3s; cursor: pointer; }
+.lightbox-close:hover, .lightbox-close:focus { color: var(--pink); text-decoration: none; cursor: pointer; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoomIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+
+/* ── CHAT UI PROMPTS ── */
+.prompt-text {
+  background: rgba(0, 255, 209, 0.08); border-left: none !important; border-bottom: 2px solid var(--cyan);
+  padding: 1rem 1.5rem; border-radius: 12px 12px 12px 0; margin-left: 0; margin-right: 2rem; position: relative;
+}
+.prompt-text::after { content: "Tú"; font-size: 0.55rem; color: var(--cyan); position: absolute; bottom: -18px; left: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.prompt-result {
+  background: rgba(255, 45, 107, 0.05); outline: none;
+  padding: 1rem 1.5rem; margin-top: 1.5rem; border-radius: 12px 12px 0 12px; margin-left: 2rem; margin-right: 0; border-bottom: 2px solid var(--pink); position: relative;
+  transition: background 0.3s;
+}
+.prompt-result:hover { background: rgba(255, 45, 107, 0.08); }
+.prompt-result > summary { border-radius: 4px; }
+.prompt-result::after { content: "IA"; font-size: 0.55rem; color: var(--pink); position: absolute; bottom: -18px; right: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* responsive */
   @media (max-width:600px) {
     nav { padding: 1rem 1.2rem; }
     .nav-links { display: none; }
