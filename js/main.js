@@ -135,10 +135,40 @@
     });
   }
 
-  /* Preloader */
+  /* Preloader Matrix Rain */
+  const canvas = document.getElementById('matrix-canvas');
+  let matrixInterval;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+    const drawMatrix = () => {
+      ctx.fillStyle = 'rgba(2, 4, 8, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    };
+    matrixInterval = setInterval(drawMatrix, 33);
+  }
+
+  /* Hide Preloader */
   setTimeout(() => {
     const preloader = document.getElementById('preloader');
-    if (preloader) preloader.classList.add('hidden');
+    if (preloader) {
+      preloader.classList.add('hidden');
+      if (matrixInterval) clearInterval(matrixInterval);
+    }
   }, 2800);
 
   /* Back to Top */
