@@ -13,6 +13,24 @@
     observer.observe(el);
   });
 
+  /* Hamburger Menu */
+  const hamburger = document.getElementById('hamburger');
+  const navLinksList = document.getElementById('nav-links');
+  const navItems = document.querySelectorAll('.nav-links a');
+
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinksList.classList.toggle('active');
+    });
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinksList.classList.remove('active');
+      });
+    });
+  }
+
   /* Smooth nav highlight */
   const sections = document.querySelectorAll('section[id]');
   const links    = document.querySelectorAll('.nav-links a');
